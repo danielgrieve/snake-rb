@@ -1,4 +1,4 @@
 # Snake
 
-Placement of random powerups, handling of screen boundaries, worm data
+Placement of random powerups, handling of screen boundaries, snake data
 structure
