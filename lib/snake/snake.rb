@@ -12,31 +12,31 @@ module Snake
       @blocks << Block.new(60, 50)
       @blocks << Block.new(70, 50)
 
-      @direction = :right
-
-      @last_move = 0
+      @last_moved = 0
     end
 
     def update
       move_time = Gosu::milliseconds
-      if @last_move + 500 < move_time
-        @blocks.each { |block| block.x += block.width }
-        @last_move = move_time
+      if @last_moved + 500 < move_time
+        @blocks.each do |block|
+          block.move
+        end
+        @last_moved = move_time
       end
     end
 
     def draw
       @blocks.each do |block|
-        draw_quad(
-          block.x, block.y, Gosu::Color::BLACK,
-          block.x + block.width, block.y, Gosu::Color::BLACK,
-          block.x, block.y + block.height, Gosu::Color::BLACK,
-          block.x + block.width, block.y + block.height, Gosu::Color::BLACK
-        )
+        block.draw(self)
       end
     end
 
     def button_down(id)
+      if id == Gosu::KbUp
+      elsif id == Gosu::KbDown
+      elsif id == Gosu::KbRight
+      elsif id == Gosu::KbLeft
+      end
     end
   end
 
@@ -48,6 +48,19 @@ module Snake
       self.y = y
       self.width = 10
       self.height = 10
+    end
+
+    def draw(game)
+      game.draw_quad(
+        x,          y,           Gosu::Color::BLACK,
+        x + width,  y,           Gosu::Color::BLACK,
+        x,          y + height,  Gosu::Color::BLACK,
+        x + width,  y + height,  Gosu::Color::BLACK
+      )
+    end
+
+    def move
+      self.x += width
     end
   end
 end

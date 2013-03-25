@@ -29,6 +29,7 @@ module Snake
     end
 
     def button_down(id)
+      @player.button_down(id)
     end
   end
 end
