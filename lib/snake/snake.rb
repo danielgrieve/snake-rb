@@ -3,12 +3,12 @@ module Snake
     extend Forwardable
     def_delegators :@game, :draw_quad
 
-    attr_reader :tail
+    attr_reader :head, :tail
 
     START_LOCATION = [100, 100]
     START_DIRECTION = [10, 0]
     START_LENGTH = 3
-    SPEED = 500
+    SPEED = 200
 
     def initialize(game)
       @game = game
@@ -34,6 +34,8 @@ module Snake
           tail.move
         end
 
+        @game.eat_food if [@head.x, @head.y] == @game.food
+
         @last_moved = move_time
       end
     end
@@ -43,6 +45,12 @@ module Snake
       @tail.each do |tail|
         tail.draw
       end
+    end
+
+    def grow
+      new_growth = @tail.last.dup
+      new_growth.queue << [0, 0]
+      @tail << new_growth
     end
 
     def button_down(id)
@@ -112,6 +120,14 @@ module Snake
 
       @x += direction[0]
       @y += direction[1]
+    end
+
+    def dup
+      dup_tail = Tail.new(@snake, x, y)
+      queue.each do |queue|
+        dup_tail.queue << queue
+      end
+      dup_tail
     end
   end
 end
