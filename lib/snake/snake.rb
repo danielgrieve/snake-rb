@@ -107,6 +107,19 @@ module Snake
         x + width,  y + height,  Gosu::Color::BLACK
       )
     end
+
+    def move_segment(x, y)
+      new_x = @x + x
+      new_x = 0 if new_x >= @snake.game.width
+      new_x = @snake.game.width - width if new_x < 0
+
+      new_y = @y + y
+      new_y = 0 if new_y >= @snake.game.height
+      new_y = @snake.game.height - height if new_y < 0
+
+      @x = new_x
+      @y = new_y
+    end
   end
 
   class Head < Segment
@@ -117,15 +130,7 @@ module Snake
     end
 
     def move
-      new_x = @x + @direction[0]
-      new_x = 0 if new_x > @snake.game.width
-      new_x = @snake.game.width if new_x < 0
-      new_y = @y + @direction[1]
-      new_y = 0 if new_y > @snake.game.height
-      new_y = @snake.game.height if new_y < 0
-
-      @x = new_x
-      @y = new_y
+      move_segment(@direction[0], @direction[1])
 
       @snake.tail.each do |tail|
         tail.queue << @direction
@@ -143,16 +148,7 @@ module Snake
 
     def move
       direction = @queue.shift
-
-      new_x = @x + direction[0]
-      new_x = 0 if new_x > @snake.game.width
-      new_x = @snake.game.width if new_x < 0
-      new_y = @y + direction[1]
-      new_y = 0 if new_y > @snake.game.height
-      new_y = @snake.game.height if new_y < 0
-
-      @x = new_x
-      @y = new_y
+      move_segment(direction[0], direction[1])
     end
 
     def dup
