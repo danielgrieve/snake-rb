@@ -13,6 +13,9 @@ module Snake
 
       @player = Snake.new(self)
 
+      @score = 0
+      @score_font = Gosu::Font.new(@window, Gosu::default_font_name, 20)
+
       place_food
     end
 
@@ -36,10 +39,13 @@ module Snake
         @food[0] + 10, @food[1] + 10, Gosu::Color::BLUE,
       )
 
+      draw_score
+
       @player.draw
     end
 
     def eat_food
+      @score += 10
       @player.grow
       place_food
     end
@@ -64,6 +70,10 @@ module Snake
     def die
       puts 'DEAD'
       @window.close
+    end
+
+    def draw_score
+      @score_font.draw(@score, 5, 5, 0)
     end
 
     def button_down(id)

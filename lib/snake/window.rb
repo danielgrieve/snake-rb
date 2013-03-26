@@ -1,7 +1,7 @@
 module Snake
   class Window < Gosu::Window
     def initialize
-      super(640, 480, false)
+      super(200, 200, false)
       self.caption = 'Snake'
 
       @game = Game.new(self)
