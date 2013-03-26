@@ -5,8 +5,13 @@ module Snake
 
     attr_reader :head, :tail
 
+    UP = [0, -10]
+    DOWN = [0, 10]
+    LEFT = [-10, 0]
+    RIGHT = [10, 0]
+
     START_LOCATION = [100, 100]
-    START_DIRECTION = [10, 0]
+    START_DIRECTION = RIGHT
     START_LENGTH = 3
     SPEED = 200
 
@@ -54,14 +59,14 @@ module Snake
     end
 
     def button_down(id)
-      if id == Gosu::KbUp
-        @head.direction = [0, -10]
-      elsif id == Gosu::KbDown
-        @head.direction = [0, 10]
-      elsif id == Gosu::KbRight
-        @head.direction = [10, 0]
-      elsif id == Gosu::KbLeft
-        @head.direction = [-10, 0]
+      if id == Gosu::KbUp && @head.direction != DOWN
+        @head.direction = UP
+      elsif id == Gosu::KbDown && @head.direction != UP
+        @head.direction = DOWN
+      elsif id == Gosu::KbLeft && @head.direction != RIGHT
+        @head.direction = LEFT
+      elsif id == Gosu::KbRight && @head.direction != LEFT
+        @head.direction = RIGHT
       end
     end
   end
