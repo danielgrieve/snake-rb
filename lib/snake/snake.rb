@@ -39,6 +39,7 @@ module Snake
           tail.move
         end
 
+        @game.die if tail_in_area?(@head.x, @head.y)
         @game.eat_food if [@head.x, @head.y] == @game.food
 
         @last_moved = move_time
@@ -56,6 +57,19 @@ module Snake
       new_growth = @tail.last.dup
       new_growth.queue << [0, 0]
       @tail << new_growth
+    end
+
+    def in_area?(x, y)
+      return true if @head.x == x && @head.y == y
+      tail_in_area?(x, y)
+    end
+
+    def tail_in_area?(x, y)
+      @tail.each do |tail|
+        return true if tail.x == x && tail.y == y
+      end
+
+      false
     end
 
     def button_down(id)

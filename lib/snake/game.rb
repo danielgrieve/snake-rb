@@ -55,21 +55,15 @@ module Snake
         random_x = random_x - (random_x % 10) if random_x % 10 != 0
         random_y = random_y - (random_y % 10) if random_y % 10 != 0
 
-        unless snake_in_area?(random_x, random_y)
+        unless @player.in_area?(random_x, random_y)
           @food = [random_x, random_y]
         end
       end
     end
 
-    def snake_in_area?(x, y)
-      head = @player.head
-      return true if head.x == x && head.y == y
-
-      @player.tail.each do |tail|
-        return true if tail.x == x && tail.y == y
-      end
-
-      false
+    def die
+      puts 'DEAD'
+      @window.close
     end
 
     def button_down(id)
