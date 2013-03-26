@@ -73,13 +73,13 @@ module Snake
     end
 
     def button_down(id)
-      if id == Gosu::KbUp && @head.direction != DOWN
+      if id == Gosu::KbUp && @head.last_movement != DOWN
         @head.direction = UP
-      elsif id == Gosu::KbDown && @head.direction != UP
+      elsif id == Gosu::KbDown && @head.last_movement != UP
         @head.direction = DOWN
-      elsif id == Gosu::KbLeft && @head.direction != RIGHT
+      elsif id == Gosu::KbLeft && @head.last_movement != RIGHT
         @head.direction = LEFT
-      elsif id == Gosu::KbRight && @head.direction != LEFT
+      elsif id == Gosu::KbRight && @head.last_movement != LEFT
         @head.direction = RIGHT
       end
     end
@@ -123,13 +123,14 @@ module Snake
   end
 
   class Head < Segment
-    attr_accessor :direction
+    attr_accessor :direction, :last_movement
 
     def initialize(snake, x, y)
       super(snake, x, y)
     end
 
     def move
+      @last_movement = @direction
       move_segment(@direction[0], @direction[1])
 
       @snake.tail.each do |tail|
