@@ -3,7 +3,7 @@ module Snake
     extend Forwardable
     def_delegators :@game, :draw_quad
 
-    attr_reader :head, :tail
+    attr_reader :head, :tail, :game
 
     UP = [0, -10]
     DOWN = [0, 10]
@@ -117,8 +117,15 @@ module Snake
     end
 
     def move
-      @x += @direction[0]
-      @y += @direction[1]
+      new_x = @x + @direction[0]
+      new_x = 0 if new_x > @snake.game.width
+      new_x = @snake.game.width if new_x < 0
+      new_y = @y + @direction[1]
+      new_y = 0 if new_y > @snake.game.height
+      new_y = @snake.game.height if new_y < 0
+
+      @x = new_x
+      @y = new_y
 
       @snake.tail.each do |tail|
         tail.queue << @direction
@@ -137,8 +144,15 @@ module Snake
     def move
       direction = @queue.shift
 
-      @x += direction[0]
-      @y += direction[1]
+      new_x = @x + direction[0]
+      new_x = 0 if new_x > @snake.game.width
+      new_x = @snake.game.width if new_x < 0
+      new_y = @y + direction[1]
+      new_y = 0 if new_y > @snake.game.height
+      new_y = @snake.game.height if new_y < 0
+
+      @x = new_x
+      @y = new_y
     end
 
     def dup
