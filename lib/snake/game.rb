@@ -1,13 +1,13 @@
 module Snake
   class Game
     extend Forwardable
+    def_delegators :@window, :draw_quad, :width, :height, :background_color, :text_color
 
-    def_delegators :@window, :draw_quad, :width, :height
+    attr_reader :food, :speed
 
-    attr_reader :food
-
-    def initialize(window)
+    def initialize(window, speed)
       @window = window
+      @speed = speed
 
       @background_color = Gosu::Color.new(255, 185, 195, 165)
 
@@ -26,10 +26,10 @@ module Snake
     def draw
       # Background
       draw_quad(
-        0,      0,       Gosu::Color::GRAY,
-        width,  0,       Gosu::Color::GRAY,
-        0,      height,  Gosu::Color::GRAY,
-        width,  height,  Gosu::Color::GRAY
+        0,      0,       background_color,
+        width,  0,       background_color,
+        0,      height,  background_color,
+        width,  height,  background_color
       )
 
       draw_quad(

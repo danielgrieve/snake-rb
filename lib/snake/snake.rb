@@ -1,7 +1,7 @@
 module Snake
   class Snake
     extend Forwardable
-    def_delegators :@game, :draw_quad
+    def_delegators :@game, :draw_quad, :speed, :text_color
 
     attr_reader :head, :tail, :game
 
@@ -13,7 +13,6 @@ module Snake
     START_LOCATION = [100, 100]
     START_DIRECTION = RIGHT
     START_LENGTH = 3
-    SPEED = 200
 
     def initialize(game)
       @game = game
@@ -33,7 +32,7 @@ module Snake
 
     def update
       move_time = Gosu::milliseconds
-      if @last_moved + SPEED < move_time
+      if @last_moved + speed < move_time
         @head.move
         @tail.each do |tail|
           tail.move
@@ -87,7 +86,7 @@ module Snake
 
   class Segment
     extend Forwardable
-    def_delegators :@snake, :draw_quad
+    def_delegators :@snake, :draw_quad, :text_color
 
     attr_accessor :x, :y, :width, :height
 
@@ -101,10 +100,10 @@ module Snake
 
     def draw
       draw_quad(
-        x,          y,           Gosu::Color::BLACK,
-        x + width,  y,           Gosu::Color::BLACK,
-        x,          y + height,  Gosu::Color::BLACK,
-        x + width,  y + height,  Gosu::Color::BLACK
+        x,          y,           text_color,
+        x + width,  y,           text_color,
+        x,          y + height,  text_color,
+        x + width,  y + height,  text_color
       )
     end
 
