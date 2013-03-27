@@ -14,7 +14,7 @@ module Snake
       @player = Snake.new(self)
 
       @score = 0
-      @score_font = Gosu::Font.new(@window, Gosu::default_font_name, 20)
+      @score_font = Gosu::Font.new(@window, 'media/visitor.ttf', 16)
 
       place_food
     end
@@ -24,22 +24,10 @@ module Snake
     end
 
     def draw
-      # Background
-      draw_quad(
-        0,      0,       background_color,
-        width,  0,       background_color,
-        0,      height,  background_color,
-        width,  height,  background_color
-      )
-
-      draw_quad(
-        @food[0], @food[1], Gosu::Color::BLUE,
-        @food[0] + 10, @food[1], Gosu::Color::BLUE,
-        @food[0], @food[1] + 10, Gosu::Color::BLUE,
-        @food[0] + 10, @food[1] + 10, Gosu::Color::BLUE,
-      )
+      draw_background
 
       draw_score
+      draw_food
 
       @player.draw
     end
@@ -48,6 +36,34 @@ module Snake
       @score += 10
       @player.grow
       place_food
+    end
+
+    def die
+      puts 'DEAD'
+      @window.close
+    end
+
+    def button_down(id)
+      @player.button_down(id)
+    end
+
+    private
+    def draw_background
+      draw_quad(
+        0,      0,       background_color,
+        width,  0,       background_color,
+        0,      height,  background_color,
+        width,  height,  background_color
+      )
+    end
+
+    def draw_score
+      @score_font.draw(@score, 5, 5, 0, 1, 1, text_color)
+    end
+
+    def draw_food
+      @food_image ||= Gosu::Image.new(@window, 'media/cherry.png', false, 0, 0, 10, 10)
+      @food_image.draw(@food[0], @food[1], 1)
     end
 
     def place_food
@@ -65,19 +81,6 @@ module Snake
           @food = [random_x, random_y]
         end
       end
-    end
-
-    def die
-      puts 'DEAD'
-      @window.close
-    end
-
-    def draw_score
-      @score_font.draw(@score, 5, 5, 0)
-    end
-
-    def button_down(id)
-      @player.button_down(id)
     end
   end
 end
