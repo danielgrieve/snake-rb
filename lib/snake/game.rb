@@ -13,14 +13,13 @@ module Snake
 
       @player = Snake.new(self)
 
-      @score = 0
       @score_font = Gosu::Font.new(@window, 'media/visitor.ttf', 16)
 
-      place_food
+      reset
     end
 
     def update
-      @player.update
+      @player.update unless @dead
     end
 
     def draw
@@ -30,6 +29,8 @@ module Snake
       draw_food
 
       @player.draw
+
+      draw_dead if @dead
     end
 
     def eat_food
@@ -39,11 +40,11 @@ module Snake
     end
 
     def die
-      puts 'DEAD'
-      @window.close
+      @dead = true
     end
 
     def button_down(id)
+      reset if @dead && id == Gosu::KbReturn
       @player.button_down(id)
     end
 
@@ -66,6 +67,36 @@ module Snake
       @food_image.draw(@food[0], @food[1], 1)
     end
 
+    def draw_dead
+      dead_bg_color = background_color.dup
+      dead_bg_color.alpha = 200
+      draw_quad(
+        0,      0,       dead_bg_color,
+        width,  0,       dead_bg_color,
+        0,      height,  dead_bg_color,
+        width,  height,  dead_bg_color,
+        2
+      )
+
+      dead_font = Gosu::Font.new(@window, 'media/visitor.ttf', 20)
+      message = "Oops, you're dead!"
+      dead_font.draw(message,
+                     (width / 2) - (dead_font.text_width(message) / 2),
+                     (height / 2) - dead_font.height, 3, 1, 1, text_color)
+
+      dead_help_font = Gosu::Font.new(@window, 'media/visitor.ttf', 14)
+
+      message = "Q to quit"
+      dead_help_font.draw(message,
+                     (width / 2) - (dead_help_font.text_width(message) / 2),
+                     (height / 2) - dead_font.height + 30, 3, 1, 1, text_color)
+
+      message = "Return to start again"
+      dead_help_font.draw(message,
+                     (width / 2) - (dead_help_font.text_width(message) / 2),
+                     (height / 2) - dead_font.height + 50, 3, 1, 1, text_color)
+    end
+
     def place_food
       @food = nil
 
@@ -81,6 +112,13 @@ module Snake
           @food = [random_x, random_y]
         end
       end
+    end
+
+    def reset
+      @score = 0
+      @dead = false
+      place_food
+      @player.reset
     end
   end
 end

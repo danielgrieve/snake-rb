@@ -18,6 +18,7 @@ module Snake
     end
 
     def button_down(id)
+      close if id == Gosu::KbQ
       @menu.button_down(id) if @menu
       @game.button_down(id) if @game
     end

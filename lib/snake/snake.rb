@@ -18,16 +18,7 @@ module Snake
       @game = game
       @last_moved = 0
 
-      @head = Head.new(self, START_LOCATION[0], START_LOCATION[1])
-      @head.direction = START_DIRECTION
-
-      @tail = []
-
-      (1..START_LENGTH).each do |num|
-        tail = Tail.new(self, START_LOCATION[0] - num*@head.width, START_LOCATION[1])
-        num.times { tail.queue << START_DIRECTION }
-        @tail << tail
-      end
+      reset
     end
 
     def update
@@ -52,6 +43,18 @@ module Snake
       end
     end
 
+    def button_down(id)
+      if id == Gosu::KbUp && @head.last_movement != DOWN
+        @head.direction = UP
+      elsif id == Gosu::KbDown && @head.last_movement != UP
+        @head.direction = DOWN
+      elsif id == Gosu::KbLeft && @head.last_movement != RIGHT
+        @head.direction = LEFT
+      elsif id == Gosu::KbRight && @head.last_movement != LEFT
+        @head.direction = RIGHT
+      end
+    end
+
     def grow
       new_growth = @tail.last.dup
       new_growth.queue << [0, 0]
@@ -71,15 +74,16 @@ module Snake
       false
     end
 
-    def button_down(id)
-      if id == Gosu::KbUp && @head.last_movement != DOWN
-        @head.direction = UP
-      elsif id == Gosu::KbDown && @head.last_movement != UP
-        @head.direction = DOWN
-      elsif id == Gosu::KbLeft && @head.last_movement != RIGHT
-        @head.direction = LEFT
-      elsif id == Gosu::KbRight && @head.last_movement != LEFT
-        @head.direction = RIGHT
+    def reset
+      @head = Head.new(self, START_LOCATION[0], START_LOCATION[1])
+      @head.direction = START_DIRECTION
+
+      @tail = []
+
+      (1..START_LENGTH).each do |num|
+        tail = Tail.new(self, START_LOCATION[0] - num*@head.width, START_LOCATION[1])
+        num.times { tail.queue << START_DIRECTION }
+        @tail << tail
       end
     end
   end
